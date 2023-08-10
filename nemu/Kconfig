@@ -69,7 +69,6 @@ config TARGET_AM
 endchoice
 
 menu "Build Options"
-[*] Enable debug information
 choice
   prompt "Compiler"
   default CC_GCC
