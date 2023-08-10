@@ -18,7 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
-
+//是否处于批处理模式
 static int is_batch_mode = false;
 
 void init_regex();
