@@ -11,11 +11,15 @@
 * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 *
 * See the Mulan PSL v2 for more details.
+MMIO是一种允许CPU和设备通信的机制，
+其中设备的寄存器被映射到主存储器的地址空间中。
+当CPU访问这些特定的内存地址时，
+它实际上是在与设备的寄存器进行交互。
 ***************************************************************************************/
 
 #include <device/map.h>
 #include <memory/paddr.h>
-
+//number_register_map
 #define NR_MAP 16
 
 static IOMap maps[NR_MAP] = {};

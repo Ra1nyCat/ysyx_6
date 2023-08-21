@@ -23,12 +23,13 @@
  * This is useful when you use the `si' command.
  * You can modify this value as you want.
  */
+// 当执行的指令数量少于此值时，只有执行的指令的汇编代码才会输出到屏幕。
 #define MAX_INST_TO_PRINT 10
 
 CPU_state cpu = {};
-uint64_t g_nr_guest_inst = 0;
+uint64_t g_nr_guest_inst = 0; //执行的指令数量
 static uint64_t g_timer = 0; // unit: us
-static bool g_print_step = false;
+static bool g_print_step = false; //是否打印每一步的执行信息
 
 void device_update();
 
@@ -45,6 +46,8 @@ static void exec_once(Decode *s, vaddr_t pc) {
   s->snpc = pc;
   isa_exec_once(s);
   cpu.pc = s->dnpc;
+
+  //指令追踪
 #ifdef CONFIG_ITRACE
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
