@@ -24,12 +24,12 @@
  * You can modify this value as you want.
  */
 // 当执行的指令数量少于此值时，只有执行的指令的汇编代码才会输出到屏幕。
-#define MAX_INST_TO_PRINT 10
+#define MAX_INST_TO_PRINT 1
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0; //执行的指令数量
 static uint64_t g_timer = 0; // unit: us
-static bool g_print_step = true; //是否打印每一步的执行信息
+static bool g_print_step = false; //是否打印每一步的执行信息
 
 void device_update();
 
