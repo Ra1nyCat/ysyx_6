@@ -165,7 +165,12 @@ static int cmd_x(char *args)
   }
   sscanf(arg,"%x",&addr);
   for(int i = 0;i < n;i++){
-    printf("0x%08x: 0x%08x\n",addr + i * 4,paddr_read(addr + i * 4,4));
+    if(likely(addr + i * 4))
+      printf("0x%08x: 0x%08x\n",addr + i * 4,paddr_read(addr + i * 4,4));
+    else{
+      printf("0x%08x out of memory in [0x%08x,0x%08x]\n",addr+ i * 4,PMEM_LEFT,PMEM_RIGHT);
+      return -1;
+    }
   }
   return 0;
 }
