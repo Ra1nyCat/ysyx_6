@@ -67,7 +67,7 @@ static int cmd_info(char *args);
 
 static int cmd_x(char *args);
 
-// static int cmd_p(char *args);
+static int cmd_p(char *args);
 
 // static int cmd_w(char *args);
 
@@ -84,7 +84,7 @@ static struct {
   { "si","Exec step by step",cmd_si},
   {"info","Print the information of registers or watchpoints",cmd_info},
   {"x","Scan the memory",cmd_x},
-  // {"p","Calculate the value of the expression",cmd_p},
+  {"p","Calculate the value of the expression",cmd_p},
   // {"w","Set a watchpoint",cmd_w},
   // {"d","Delete a watchpoint",cmd_d},
   // {"bt","Print the stack frame chain",cmd_bt},
@@ -171,6 +171,24 @@ static int cmd_x(char *args)
       printf("0x%08x out of memory in [0x%08x,0x%08x]\n",addr+ i * 4,PMEM_LEFT,PMEM_RIGHT);
       return -1;
     }
+  }
+  return 0;
+}
+
+static int cmd_p(char *args)
+{
+  char *arg = strtok(NULL," ");
+  if(arg == NULL){
+    printf("Please input the argument!\n");
+    return 0;
+  }
+  bool success = true;
+  word_t result = expr(arg,&success);
+  if(success){
+    printf("%d\n",result);
+  }
+  else{
+    printf("Invalid expression!\n");
   }
   return 0;
 }

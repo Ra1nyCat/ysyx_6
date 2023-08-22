@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, TK_EQ,TK_NUMBER ,TK_XNUMBER,TK_CHAR
 
   /* TODO: Add more token types */
 
@@ -39,6 +39,14 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
+  {"-", '-'},           // minus
+  {"\\*", '*'},         // multiply
+  {"\\/", '/'},         // divide
+  {"\\(", '('},         // left bracket
+  {"\\)", ')'},         // right bracket
+  {"^[0-9]+", TK_NUMBER},// 10-number
+  {"^0[xX][0-9a-fA-F]+",TK_XNUMBER},//16-number
+  {"^[a-zA-Z_][a-zA-Z0-9_]*", TK_CHAR},// variable
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -95,6 +103,52 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
+          case TK_NOTYPE: break;
+          case TK_NUMBER: 
+            tokens[nr_token].type = rules[i].token_type;
+            strncpy(tokens[nr_token].str,substr_start,substr_len);
+            nr_token++;
+            break;
+          case TK_CHAR:
+            tokens[nr_token].type = rules[i].token_type;
+            strncpy(tokens[nr_token].str,substr_start,substr_len);
+            nr_token++;
+            break;
+          case TK_EQ:
+            tokens[nr_token].type = rules[i].token_type;
+            strncpy(tokens[nr_token].str,substr_start,substr_len);
+            nr_token++;
+            break;
+          case '+':
+            tokens[nr_token].type = rules[i].token_type;
+            strncpy(tokens[nr_token].str,substr_start,substr_len);
+            nr_token++;
+            break;
+          case '-':
+            tokens[nr_token].type = rules[i].token_type;
+            strncpy(tokens[nr_token].str,substr_start,substr_len);
+            nr_token++;
+            break;
+          case '*':
+            tokens[nr_token].type = rules[i].token_type;
+            strncpy(tokens[nr_token].str,substr_start,substr_len);
+            nr_token++;
+            break;
+          case '/':
+            tokens[nr_token].type = rules[i].token_type;
+            strncpy(tokens[nr_token].str,substr_start,substr_len);
+            nr_token++;
+            break;
+          case '(':
+            tokens[nr_token].type = rules[i].token_type;
+            strncpy(tokens[nr_token].str,substr_start,substr_len);
+            nr_token++;
+            break;
+          case ')':
+            tokens[nr_token].type = rules[i].token_type;
+            strncpy(tokens[nr_token].str,substr_start,substr_len);
+            nr_token++;
+            break;
           default: TODO();
         }
 
