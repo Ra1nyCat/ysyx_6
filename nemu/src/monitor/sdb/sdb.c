@@ -181,9 +181,6 @@ static int cmd_p(char *args)
   if(arg == NULL){
     printf("Please input the argument!\n");
     return 0;
-  }else{
-    printf("%s\n",arg);
-    printf("%s \n",args);
   }
   bool success = true;
   word_t result = expr(arg,&success);
@@ -218,6 +215,7 @@ void sdb_mainloop() {
      */
     // 将剩余的字符串视为命令的参数
     char *args = cmd + strlen(cmd) + 1;
+    printf("args: %s\n", args);
     if (args >= str_end) {
       args = NULL;
     }
