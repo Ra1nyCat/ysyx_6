@@ -232,7 +232,7 @@ word_t eval(int l,int r,bool *success)
   }else{
     printf("Error: Expr is not legal!\n");
     *success=false;
-    return 0;
+    return -1;
   }
 }
 
