@@ -210,18 +210,18 @@ int dominant_operator(int l,int r)
   return op;
 }
 
-word_t eval(int l,int r)
+word_t eval(int l,int r,bool *success)
 {
   if(l>r){
     return 0;
   }else if(l==r){
     return atoi(tokens[l].str);
   }else if(check_parenthesis(l,r) == 1){
-    return eval(l+1,r-1);
+    return eval(l+1,r-1,success);
   }else if(check_parenthesis(l,r)==0){
     int op = dominant_operator(l,r);
-    int val1 = eval(l,op-1);
-    int val2 = eval(op+1,r);
+    int val1 = eval(l,op-1,success);
+    int val2 = eval(op+1,r,success);
     switch(tokens[op].type){
       case '+': return val1 + val2;
       case '-': return val1 - val2;
@@ -231,7 +231,8 @@ word_t eval(int l,int r)
     }
   }else{
     printf("Error: Expr is not legal!\n");
-    return -1;
+    *success=false;
+    return 0;
   }
 }
 
@@ -242,7 +243,6 @@ word_t expr(char *e, bool *success) {
   }
   /* TODO: Insert codes to evaluate the expression. */
   int begin=0,end=nr_token-1;
-  word_t res=eval(begin,end);
-  
+  word_t res=eval(begin,end,success);
   return res;
 }
