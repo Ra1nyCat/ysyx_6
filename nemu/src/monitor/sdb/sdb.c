@@ -214,7 +214,7 @@ void sdb_mainloop() {
      */
     // 将剩余的字符串视为命令的参数
     char *args = cmd + strlen(cmd) + 1;
-    printf("args: %s\n", args);
+    //printf("args: %s\n", args);
     if (args >= str_end) {
       args = NULL;
     }

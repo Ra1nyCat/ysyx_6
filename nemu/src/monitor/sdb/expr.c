@@ -158,15 +158,88 @@ static bool make_token(char *e) {
   return true;
 }
 
+bool check_parenttheses(int l,int r)
+{
+  if(tokens[l].type == '(' && tokens[r].type == ')'){
+    int i;
+    int count = 0;
+    for(i=l+1;i<r;i++){
+      if(tokens[i].type == '('){
+        count++;
+      }else if(tokens[i].type == ')'){
+        count--;
+      }
+      if(count < 0){
+        return false;
+      }
+    }
+    if(count == 0){
+      return true;
+    }
+  }
+  return false;
+}
+
+int dominant_operator(int l,int r)
+{
+  int i;
+  int count = 0;
+  int op = -1;
+  int priority = 3;
+  for(i=l;i<=r;i++){
+    if(tokens[i].type == '('){
+      count++;
+    }else if(tokens[i].type == ')'){
+      count--;
+    }
+    if(count == 0){
+      if(tokens[i].type == '+' || tokens[i].type == '-'){
+        if(priority >= 1){
+          priority = 1;
+          op = i;
+        }
+      }else if(tokens[i].type == '*' || tokens[i].type == '/'){
+        if(priority >= 2){
+          priority = 2;
+          op = i;
+        }
+      }
+    }
+  }
+  return op;
+}
+
+word_t eval(int l,int r)
+{
+  if(l>r){
+    return 0;
+  }else if(l==r){
+    return atoi(tokens[l].str);
+  }else if(check_parenttheses(l,r) == true){
+    return eval(l+1,r-1);
+  }else{
+    int op = dominant_operator(l,r);
+    int val1 = eval(l,op-1);
+    int val2 = eval(op+1,r);
+    switch(tokens[op].type){
+      case '+': return val1 + val2;
+      case '-': return val1 - val2;
+      case '*': return val1 * val2;
+      case '/': return val1 / val2;
+      default: assert(0);
+    }
+  }
+}
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;
   }
-
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
-
-  return 0;
+  int begin=0,end=nr_token-1;
+  word_t res=eval(begin,end);
+  
+  return res;
 }
