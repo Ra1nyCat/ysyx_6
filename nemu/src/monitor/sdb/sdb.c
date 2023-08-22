@@ -183,6 +183,7 @@ static int cmd_p(char *args)
     return 0;
   }else{
     printf("%s\n",arg);
+    printf("%s \n",args);
   }
   bool success = true;
   word_t result = expr(arg,&success);
