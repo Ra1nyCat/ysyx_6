@@ -178,7 +178,17 @@ int check_parenthesis(int l,int r)
       return 1;
     }
   }
-  return 0;
+  else if(tokens[l].type == '(' && tokens[r].type != ')'){
+    printf("Error: Expr is not legal!\n");
+    return -1;
+  }
+  else if(tokens[l].type != '(' && tokens[r].type == ')'){
+    printf("Error: Expr is not legal!\n");
+    return -1;
+  }
+  else if(tokens[l].type != '(' && tokens[r].type != ')'){
+    return 0;
+  }
 }
 
 int dominant_operator(int l,int r)
