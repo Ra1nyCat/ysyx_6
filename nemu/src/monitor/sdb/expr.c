@@ -101,9 +101,7 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
-          case TK_NOTYPE: 
-            printf("TK_NOTYPE\n");
-            break;
+          case TK_NOTYPE: break;
           case TK_NUMBER: 
             tokens[nr_token].type = rules[i].token_type;
             strncpy(tokens[nr_token].str,substr_start,substr_len);
