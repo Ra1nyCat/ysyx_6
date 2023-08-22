@@ -186,9 +186,10 @@ int check_parenthesis(int l,int r)
     printf("Error: Expr is not legal!\n");
     return -1;
   }
-  else if(tokens[l].type != '(' && tokens[r].type != ')'){
+  else{
     return 0;
   }
+  return 0;
 }
 
 int dominant_operator(int l,int r)
