@@ -177,13 +177,12 @@ static int cmd_x(char *args)
 
 static int cmd_p(char *args)
 {
-  char *arg = strtok(NULL," ");
-  if(arg == NULL){
+  if(args == NULL){
     printf("Please input the argument!\n");
     return 0;
   }
   bool success = true;
-  word_t result = expr(arg,&success);
+  word_t result = expr(args,&success);
   if(success){
     printf("%d\n",result);
   }
