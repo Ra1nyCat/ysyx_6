@@ -181,6 +181,8 @@ static int cmd_p(char *args)
   if(arg == NULL){
     printf("Please input the argument!\n");
     return 0;
+  }else{
+    printf("%s\n",arg);
   }
   bool success = true;
   word_t result = expr(arg,&success);
