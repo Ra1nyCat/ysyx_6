@@ -158,7 +158,7 @@ static bool make_token(char *e) {
   return true;
 }
 
-bool check_parenttheses(int l,int r)
+int check_parenthesis(int l,int r)
 {
   if(tokens[l].type == '(' && tokens[r].type == ')'){
     int i;
@@ -170,14 +170,15 @@ bool check_parenttheses(int l,int r)
         count--;
       }
       if(count < 0){
-        return false;
+        printf("Error: Expr is not legal!\n");
+        return -1;
       }
     }
     if(count == 0){
-      return true;
+      return 1;
     }
   }
-  return false;
+  return 0;
 }
 
 int dominant_operator(int l,int r)
@@ -215,9 +216,9 @@ word_t eval(int l,int r)
     return 0;
   }else if(l==r){
     return atoi(tokens[l].str);
-  }else if(check_parenttheses(l,r) == true){
+  }else if(check_parenthesis(l,r) == 1){
     return eval(l+1,r-1);
-  }else{
+  }else if(check_parenthesis(l,r)==0){
     int op = dominant_operator(l,r);
     int val1 = eval(l,op-1);
     int val2 = eval(op+1,r);
@@ -228,6 +229,9 @@ word_t eval(int l,int r)
       case '/': return val1 / val2;
       default: assert(0);
     }
+  }else{
+    printf("Error: Expr is not legal!\n");
+    return -1;
   }
 }
 
@@ -237,7 +241,6 @@ word_t expr(char *e, bool *success) {
     return 0;
   }
   /* TODO: Insert codes to evaluate the expression. */
-  //TODO();
   int begin=0,end=nr_token-1;
   word_t res=eval(begin,end);
   
