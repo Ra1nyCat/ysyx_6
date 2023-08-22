@@ -227,7 +227,7 @@ word_t eval(int l,int r,bool *success)
       case '-': return val1 - val2;
       case '*': return val1 * val2;
       case '/': return val1 / val2;
-      default: assert(0);
+      default: return -1;
     }
   }else{
     printf("Error: Expr is not legal!\n");
