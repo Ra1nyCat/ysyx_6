@@ -253,7 +253,12 @@ word_t eval(int l,int r,bool *success)
       case '+': return val1 + val2;
       case '-': return val1 - val2;
       case '*': return val1 * val2;
-      case '/': return val1 / val2;
+      case '/': 
+        if(val2==0){
+          printf("Divide 0!\n");
+          val2=1;
+        }
+        return val1 / val2;
       default: assert(0);
     }
   }else{
