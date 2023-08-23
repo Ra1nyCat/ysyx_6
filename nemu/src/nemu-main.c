@@ -24,7 +24,7 @@ int is_exit_status_bad();
 void test_expr()
 {
   //读取文件
-  FILE *fp = fopen("tools/gen-expr/input", "r");
+  FILE *fp = fopen("../tools/gen-expr/input", "r");
   assert(fp != NULL);
   char buf[65536]={};
   while(true)
