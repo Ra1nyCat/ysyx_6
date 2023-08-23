@@ -14,11 +14,46 @@
 ***************************************************************************************/
 
 #include <common.h>
+#include "monitor/sdb/sdb.h"
 
 void init_monitor(int, char *[]);
 void am_init_monitor();
 void engine_start();
 int is_exit_status_bad();
+
+void test_expr()
+{
+  //读取文件
+  FILE *fp = fopen("tools/gen-expr/input", "r");
+  assert(fp != NULL);
+  char buf[65536]={};
+  while(true)
+  {
+    memset(buf,0,65536);
+    char *eof=fgets(buf, 65536, fp);
+    if(eof==NULL&&feof(fp))break;
+
+     //读取结果
+    char *res=strtok(buf," ");
+    assert(res!=NULL);
+    uint32_t ans;
+    sscanf(res,"%u",&ans);
+
+    char *expr_str=buf+strlen(res)+1;
+    bool success=true;
+    uint32_t ans2=expr(expr_str,&success);
+
+    if(success){
+      if(ans==ans2)printf("Correct!\n");
+      else printf("Wrong answer!\n");
+    }else{
+      printf("Expr has bug\n");
+    }
+
+  }
+  fclose(fp);
+  return;
+}
 
 int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
@@ -29,8 +64,13 @@ int main(int argc, char *argv[]) {
 #endif
 
   /* Start engine. */
-  engine_start();
-  //return 0;
+  // engine_start();
+  // //return 0;
 
-  return is_exit_status_bad();
+  // return is_exit_status_bad();
+
+  //test expr
+
+  test_expr();
+
 }
