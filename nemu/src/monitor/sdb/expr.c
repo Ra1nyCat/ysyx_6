@@ -44,7 +44,7 @@ static struct rule {
   {"\\/", '/'},         // divide
   {"\\(", '('},         // left bracket
   {"\\)", ')'},         // right bracket
-  {"[0-9]+", TK_NUMBER},// 10-number
+  {"[0-9]+U", TK_NUMBER},// 10-number
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -228,8 +228,8 @@ word_t eval(int l,int r,bool *success)
     return eval(l+1,r-1,success);
   }else if(check_parenthesis(l,r)==0){
     int op = dominant_operator(l,r);
-    int val1 = eval(l,op-1,success);
-    int val2 = eval(op+1,r,success);
+    uint32_t val1 = eval(l,op-1,success);
+    uint32_t val2 = eval(op+1,r,success);
     switch(tokens[op].type){
       case '+': return val1 + val2;
       case '-': return val1 - val2;
