@@ -51,6 +51,7 @@ void test_expr()
       if(ans==ans2)y++;
       else {
         printf("wrong expr:\n---%s\n",expr_str);
+        printf("%u %u\n",ans,ans2);
         n++;
       }
     }else{
