@@ -170,7 +170,6 @@ int check_parenthesis(int l,int r)
         count--;
       }
       if(count < 0){
-        printf("Error: Expr is not legal!\n");
         return -1;
       }
     }
@@ -178,18 +177,16 @@ int check_parenthesis(int l,int r)
       return 1;
     }
   }
-  else if(tokens[l].type == '(' && tokens[r].type != ')'){
-    printf("Error: Expr is not legal!\n");
-    return -1;
+  int count=0;
+  for(int i=l;i<=r;i++){
+    if(tokens[i].type == '('){
+      count++;
+    }else if(tokens[i].type==')'){
+      count--;
+    }
   }
-  else if(tokens[l].type != '(' && tokens[r].type == ')'){
-    printf("Error: Expr is not legal!\n");
-    return -1;
-  }
-  else{
-    return 0;
-  }
-  return 0;
+  if(count==0)return 0;
+  else return -1;
 }
 
 int dominant_operator(int l,int r)
