@@ -40,6 +40,10 @@ void test_expr()
     sscanf(res,"%u",&ans);
 
     char *expr_str=buf+strlen(res)+1;
+    int len=strlen(expr_str);
+    if(len>0&&expr_str[len-1]=='\n')expr_str[len-1]=' ';
+    printf("expr:%s",expr_str);
+    
     bool success=true;
     uint32_t ans2=expr(expr_str,&success);
 

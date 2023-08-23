@@ -44,7 +44,7 @@ static struct rule {
   {"\\/", '/'},         // divide
   {"\\(", '('},         // left bracket
   {"\\)", ')'},         // right bracket
-  {"[0-9]+U", TK_NUMBER},// 10-number
+  {"[0-9]+", TK_NUMBER},// 10-number
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -218,12 +218,23 @@ int dominant_operator(int l,int r)
   return op;
 }
 
+//将字符串转化为无符号整数
+uint32_t str2val(char *str)
+{
+  int len = strlen(str);
+  uint32_t val = 0;
+  for(int i=0;i<len;i++){
+    val = val*10 + str[i]-'0';
+  }
+  return val;
+}
+
 word_t eval(int l,int r,bool *success)
 {
   if(l>r){
     return 0;
   }else if(l==r){
-    return atoi(tokens[l].str);
+    return str2val(tokens[l].str);
   }else if(check_parenthesis(l,r) == 1){
     return eval(l+1,r-1,success);
   }else if(check_parenthesis(l,r)==0){
