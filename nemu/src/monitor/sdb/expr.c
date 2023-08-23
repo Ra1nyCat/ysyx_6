@@ -240,10 +240,19 @@ int check_parenthesis(int l,int r)
 
 int dominant_operator(int l,int r)
 {
+  /*
+      优先级：
+      1. -负号   6 
+      2. * /    5
+      3. + -    4
+      4. == !=  3
+      5. &&     2
+      6. ||     1
+  */
   int i;
   int count = 0;
   int op = -1;
-  int priority = 3;
+  int priority = 6;
   for(i=l;i<=r;i++){
     if(tokens[i].type == '('){
       count++;
@@ -251,14 +260,34 @@ int dominant_operator(int l,int r)
       count--;
     }
     if(count == 0){
-      if(tokens[i].type == '+' || tokens[i].type == '-'){
+      if(tokens[i].type == TK_NEGATIVE){
+        if(priority >= 5){
+          priority = 5;
+          op = i;
+        }
+      }else if(tokens[i].type == '*'||tokens[i].type == '/'){
+        if(priority >= 4){
+          priority = 4;
+          op = i;
+        }
+      }else if(tokens[i].type == '+'||tokens[i].type == '-'){
+        if(priority >= 3){
+          priority = 3;
+          op = i;
+        }
+      }else if(tokens[i].type == TK_EQ||tokens[i].type == TK_NONEQUAL){
+        if(priority >= 2){
+          priority = 2;
+          op = i;
+        }
+      }else if(tokens[i].type == TK_AND){
         if(priority >= 1){
           priority = 1;
           op = i;
         }
-      }else if(tokens[i].type == '*' || tokens[i].type == '/'){
-        if(priority >= 2){
-          priority = 2;
+      }else if(tokens[i].type == TK_OR){
+        if(priority >= 0){
+          priority = 0;
           op = i;
         }
       }
