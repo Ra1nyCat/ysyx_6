@@ -50,8 +50,10 @@ void test_expr()
     if(success){
       if(ans==ans2)y++;
       else {
+        puts("=========================");
         printf("wrong expr:\n---%s\n",expr_str);
         printf("%u %u\n",ans,ans2);
+        puts("=========================\n");
         n++;
       }
     }else{
