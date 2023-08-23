@@ -42,14 +42,17 @@ void test_expr()
     char *expr_str=buf+strlen(res)+1;
     int len=strlen(expr_str);
     if(len>0&&expr_str[len-1]=='\n')expr_str[len-1]=' ';
-    printf("expr:%s",expr_str);
-    
     bool success=true;
     uint32_t ans2=expr(expr_str,&success);
 
+    int y=0,n=0;
+
     if(success){
-      if(ans==ans2)printf("Correct!\n");
-      else printf("Wrong answer!\n");
+      if(ans==ans2)y++;
+      else {
+        printf("%s\n",expr_str);
+        n++;
+      }
     }else{
       printf("Expr has bug\n");
     }
