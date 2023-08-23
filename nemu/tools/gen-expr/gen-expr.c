@@ -52,7 +52,6 @@ void gen_num()
 {
   uint32_t num = choose(100);
   sprintf(buf+strlen(buf),"%u",num);
-  buf[strlen(buf)] = 'U';
 }
 
 void gen_rand_op() {
