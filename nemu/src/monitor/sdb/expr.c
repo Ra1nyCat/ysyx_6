@@ -175,18 +175,11 @@ int check_parenthesis(int l,int r)
     }
     if(count == 0){
       return 1;
+    }else if(count>0){
+      return -1;
     }
   }
-  int count=0;
-  for(int i=l;i<=r;i++){
-    if(tokens[i].type == '('){
-      count++;
-    }else if(tokens[i].type==')'){
-      count--;
-    }
-  }
-  if(count==0)return 0;
-  else return -1;
+  return 0;
 }
 
 int dominant_operator(int l,int r)
