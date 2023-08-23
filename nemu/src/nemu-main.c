@@ -73,12 +73,15 @@ int main(int argc, char *argv[]) {
   init_monitor(argc, argv);
 #endif
 
-#ifdef EXPR_TEST
-  test_expr();
-  return 0;
-#else
-  /* Start engine. */
+// #ifdef EXPR_TEST
+//   test_expr();
+//   return 0;
+// #else
+//   /* Start engine. */
+//   engine_start();
+//   return is_exit_status_bad();
+// #endif
+    /* Start engine. */
   engine_start();
   return is_exit_status_bad();
-#endif
 }
