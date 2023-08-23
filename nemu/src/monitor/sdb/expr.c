@@ -160,26 +160,41 @@ static bool make_token(char *e) {
 
 int check_parenthesis(int l,int r)
 {
-  if(tokens[l].type == '(' && tokens[r].type == ')'){
-    int i;
-    int count = 0;
-    for(i=l+1;i<r;i++){
-      if(tokens[i].type == '('){
-        count++;
-      }else if(tokens[i].type == ')'){
-        count--;
-      }
-      if(count < 0){
-        return -1;
-      }
-    }
-    if(count == 0){
-      return 1;
-    }else if(count>0){
+  /*
+    1: 最外层括号冗余，可以去除
+    0: 括号合法，但是最外层不冗余
+    -1:括号不合法
+  */
+  //首先检查括号是否合法
+  int count = 0;
+  for(int i=l;i<=r;i++)
+  {
+    if(tokens[i].type == '(')
+      count++;
+    if(tokens[i].type == ')')
+      count--;
+    if(count<0)
       return -1;
-    }
   }
-  return 0;
+  if(count<0)return -1;
+
+  //检查最外层括号是否冗余
+  if(tokens[l].type == '(' && tokens[r].type == ')')
+  {
+    count = 0;
+    for(int i=l;i<=r;i++)
+    {
+      if(tokens[i].type == '(')
+        count++;
+      if(tokens[i].type == ')')
+        count--;
+      if(count == 0 && i != r)
+        return 0; //不是冗余
+    }
+    return 1; //是冗余
+  }
+  //unable to reach here
+  return -1;
 }
 
 int dominant_operator(int l,int r)
@@ -228,7 +243,7 @@ word_t eval(int l,int r,bool *success)
     return 0;
   }else if(l==r){
     return str2val(tokens[l].str);
-  }else if(check_parenthesis(l,r) == 1){
+  }else if(check_parenthesis(l,r) == 1){ //摘掉一个括号
     return eval(l+1,r-1,success);
   }else if(check_parenthesis(l,r)==0){
     int op = dominant_operator(l,r);
