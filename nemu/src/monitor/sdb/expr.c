@@ -339,6 +339,7 @@ word_t eval(int l,int r,bool *success)
       case TK_EQ: return val1 == val2;
       case TK_NONEQUAL: return val1 != val2;
       case TK_DEREF: return vaddr_read(val2,4);
+      case TK_NEGATIVE: return -val2;
       default: assert(0);
     }
   }else{
