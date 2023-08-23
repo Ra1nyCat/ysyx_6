@@ -14,17 +14,17 @@
 ***************************************************************************************/
 
 #include <isa.h>
-
+#include <memory/vaddr.h>
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,TK_NUMBER ,TK_XNUMBER,TK_CHAR
-
+  TK_NOTYPE = 256, TK_EQ,TK_NUMBER ,TK_XNUMBER,TK_REGISTER,TK_NONEQUAL,TK_AND,TK_OR,
+  TK_DEREF, //解引用
+  TK_NEGATIVE //负号
   /* TODO: Add more token types */
-
 };
 
 static struct rule {
@@ -35,7 +35,6 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
@@ -45,6 +44,11 @@ static struct rule {
   {"\\(", '('},         // left bracket
   {"\\)", ')'},         // right bracket
   {"[0-9]+", TK_NUMBER},// 10-number
+  {"0[xX][0-9a-fA-F]+",TK_XNUMBER},// 16-number
+  {"$[a-zA-Z]+[0-9]+",TK_REGISTER},// register
+  {"!=",TK_NONEQUAL},// not equal
+  {"&&",TK_AND},// and
+  {"\\|\\|",TK_OR},// or
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -75,6 +79,27 @@ typedef struct token {
 
 static Token tokens[65536] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
+
+static void pre_process()
+{
+  int i=0;
+  for(i=0;i<nr_token;i++)
+  {
+    //处理负号
+    if(tokens[i].type=='-'&&
+    (i==0||(tokens[i-1].type!=TK_NUMBER&&tokens[i-1].type!=TK_XNUMBER&&tokens[i-1].type!=TK_REGISTER&&tokens[i-1].type!=')')))
+    {
+      tokens[i].type=TK_NEGATIVE;
+    }
+
+    //处理解引用
+    if(tokens[i].type=='*'&&
+    (i==0||(tokens[i-1].type!=TK_NUMBER&&tokens[i-1].type!=TK_XNUMBER&&tokens[i-1].type!=TK_REGISTER&&tokens[i-1].type!=')')))
+    {
+      tokens[i].type=TK_DEREF;
+    }
+  }
+}
 
 static bool make_token(char *e) {
   int position = 0;
@@ -108,55 +133,63 @@ static bool make_token(char *e) {
             strncpy(tokens[nr_token].str,substr_start,substr_len-1);
             nr_token++;
             break;
-          case TK_EQ:
+          case TK_XNUMBER:
             tokens[nr_token].type = rules[i].token_type;
             memset(tokens[nr_token].str,0,sizeof(tokens[nr_token].str));
-            strncpy(tokens[nr_token].str,substr_start,substr_len);
+            strncpy(tokens[nr_token].str,substr_start,substr_len-1);
+            nr_token++;
+            break;
+          case TK_REGISTER:
+            tokens[nr_token].type = rules[i].token_type;
+            memset(tokens[nr_token].str,0,sizeof(tokens[nr_token].str));
+            strncpy(tokens[nr_token].str,substr_start+1,substr_len-1);
+            nr_token++;
+            break;
+          case TK_AND:
+            tokens[nr_token].type = rules[i].token_type;
+            nr_token++;
+            break;
+          case TK_OR:
+            tokens[nr_token].type = rules[i].token_type;
+            nr_token++;
+            break;
+          case TK_NONEQUAL:
+            tokens[nr_token].type = rules[i].token_type;
+            nr_token++;
+            break;
+          case TK_EQ:
+            tokens[nr_token].type = rules[i].token_type;
             nr_token++;
             break;
           case '+':
             tokens[nr_token].type = rules[i].token_type;
-            memset(tokens[nr_token].str,0,sizeof(tokens[nr_token].str));
-            strncpy(tokens[nr_token].str,substr_start,substr_len);
             nr_token++;
             break;
           case '-':
             tokens[nr_token].type = rules[i].token_type;
-            memset(tokens[nr_token].str,0,sizeof(tokens[nr_token].str));
-            strncpy(tokens[nr_token].str,substr_start,substr_len);
             nr_token++;
             break;
           case '*':
             tokens[nr_token].type = rules[i].token_type;
-            memset(tokens[nr_token].str,0,sizeof(tokens[nr_token].str));
-            strncpy(tokens[nr_token].str,substr_start,substr_len);
             nr_token++;
             break;
           case '/':
             tokens[nr_token].type = rules[i].token_type;
-            memset(tokens[nr_token].str,0,sizeof(tokens[nr_token].str));
-            strncpy(tokens[nr_token].str,substr_start,substr_len);
             nr_token++;
             break;
           case '(':
             tokens[nr_token].type = rules[i].token_type;
-            memset(tokens[nr_token].str,0,sizeof(tokens[nr_token].str));
-            strncpy(tokens[nr_token].str,substr_start,substr_len);
             nr_token++;
             break;
           case ')':
             tokens[nr_token].type = rules[i].token_type;
-            memset(tokens[nr_token].str,0,sizeof(tokens[nr_token].str));
-            strncpy(tokens[nr_token].str,substr_start,substr_len);
             nr_token++;
             break;
           default: TODO();
         }
-
         break;
       }
     }
-
     if (i == NR_REGEX) {
       printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
       return false;
@@ -245,11 +278,45 @@ uint32_t str2val(char *str)
   return val;
 }
 
+//将16进制字符串转化为无符号整数
+uint32_t str2hval(char *str)
+{
+  int len = strlen(str);
+  uint32_t val = 0;
+  for(int i=2;i<len;i++){
+    if(str[i]>='0'&&str[i]<='9'){
+      val = val*16 + str[i]-'0';
+    }else if(str[i]>='a'&&str[i]<='f'){
+      val = val*16 + str[i]-'a'+10;
+    }else if(str[i]>='A'&&str[i]<='F'){
+      val = val*16 + str[i]-'A'+10;
+    }
+  }
+  return val;
+}
+
+
 word_t eval(int l,int r,bool *success)
 {
   if(l>r){
     return 0;
   }else if(l==r){
+    switch (tokens[l].type)
+    {
+    case TK_NUMBER:
+      return str2val(tokens[l].str);
+      break;
+    case TK_XNUMBER:
+      return str2hval(tokens[l].str);
+      break;
+    case TK_REGISTER:
+      return isa_reg_str2val(tokens[l].str,success);
+      break;
+    default:
+      printf("Invalid expression!\n");
+      return -1;
+      break;
+    }
     return str2val(tokens[l].str);
   }else if(check_parenthesis(l,r) == 1){ //摘掉一个括号
     return eval(l+1,r-1,success);
@@ -267,6 +334,11 @@ word_t eval(int l,int r,bool *success)
           val2=1;
         }
         return val1 / val2;
+      case TK_AND: return val1 && val2;
+      case TK_OR: return val1 || val2;
+      case TK_EQ: return val1 == val2;
+      case TK_NONEQUAL: return val1 != val2;
+      case TK_DEREF: return vaddr_read(val2,4);
       default: assert(0);
     }
   }else{
@@ -280,6 +352,7 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
+  pre_process();
   /* TODO: Insert codes to evaluate the expression. */
   int begin=0,end=nr_token-1;
   word_t res=eval(begin,end,success);

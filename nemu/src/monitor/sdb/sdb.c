@@ -19,6 +19,7 @@
 #include <readline/history.h>
 #include "sdb.h"
 #include <memory/paddr.h>
+#include <memory/vaddr.h>
 
 //是否处于批处理模式
 static int is_batch_mode = false;
@@ -166,7 +167,7 @@ static int cmd_x(char *args)
   sscanf(arg,"%x",&addr);
   for(int i = 0;i < n;i++){
     if(likely(addr + i * 4))
-      printf("0x%08x: 0x%08x\n",addr + i * 4,paddr_read(addr + i * 4,4));
+      printf("0x%08x: 0x%08x\n",addr + i * 4,vaddr_read(addr + i * 4,4));
     else{
       printf("0x%08x out of memory in [0x%08x,0x%08x]\n",addr+ i * 4,PMEM_LEFT,PMEM_RIGHT);
       return -1;
