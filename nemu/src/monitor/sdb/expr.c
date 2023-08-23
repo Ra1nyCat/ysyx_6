@@ -44,7 +44,7 @@ static struct rule {
   {"\\/", '/'},         // divide
   {"\\(", '('},         // left bracket
   {"\\)", ')'},         // right bracket
-  {"[0-9]+U", TK_NUMBER},// 10-number
+  {"[0-9]+", TK_NUMBER},// 10-number
 };
 
 #define NR_REGEX ARRLEN(rules)
