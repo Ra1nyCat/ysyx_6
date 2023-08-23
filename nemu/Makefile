@@ -59,3 +59,9 @@ else
 # Include rules to build NEMU
 include $(NEMU_HOME)/scripts/native.mk
 endif
+
+ifdef EXPR_TEST
+CFLAGS+=-DEXPR_TEST
+else
+CFLAGS=
+endif
