@@ -74,13 +74,13 @@ int main(int argc, char *argv[]) {
 #endif
 
   /* Start engine. */
-  // engine_start();
-  // //return 0;
+  engine_start();
+  //return 0;
 
-  // return is_exit_status_bad();
+  return is_exit_status_bad();
 
   //test expr
 
-  test_expr();
+  // test_expr();
 
 }
