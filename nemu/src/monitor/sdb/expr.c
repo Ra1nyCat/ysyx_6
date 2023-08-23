@@ -130,19 +130,19 @@ static bool make_token(char *e) {
           case TK_NUMBER: 
             tokens[nr_token].type = rules[i].token_type;
             memset(tokens[nr_token].str,0,sizeof(tokens[nr_token].str));
-            strncpy(tokens[nr_token].str,substr_start,substr_len-1);
+            strncpy(tokens[nr_token].str,substr_start,substr_len);
             nr_token++;
             break;
           case TK_XNUMBER:
             tokens[nr_token].type = rules[i].token_type;
             memset(tokens[nr_token].str,0,sizeof(tokens[nr_token].str));
-            strncpy(tokens[nr_token].str,substr_start,substr_len-1);
+            strncpy(tokens[nr_token].str,substr_start,substr_len);
             nr_token++;
             break;
           case TK_REGISTER:
             tokens[nr_token].type = rules[i].token_type;
             memset(tokens[nr_token].str,0,sizeof(tokens[nr_token].str));
-            strncpy(tokens[nr_token].str,substr_start+1,substr_len-1);
+            strncpy(tokens[nr_token].str,substr_start+1,substr_len);
             nr_token++;
             break;
           case TK_AND:
