@@ -193,8 +193,8 @@ int check_parenthesis(int l,int r)
     }
     return 1; //是冗余
   }
-  //unable to reach here
-  return -1;
+  //括号合法但不冗余
+  return 0;
 }
 
 int dominant_operator(int l,int r)
