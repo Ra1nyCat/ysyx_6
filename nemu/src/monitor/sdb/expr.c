@@ -242,6 +242,7 @@ word_t eval(int l,int r,bool *success)
   if(l>r){
     return 0;
   }else if(l==r){
+    printf("str:%s\n",tokens[l].str);
     return str2val(tokens[l].str);
   }else if(check_parenthesis(l,r) == 1){ //摘掉一个括号
     return eval(l+1,r-1,success);
