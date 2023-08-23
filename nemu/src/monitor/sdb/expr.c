@@ -243,11 +243,12 @@ int dominant_operator(int l,int r)
   /*
       优先级：
       1. -负号   6 
-      2. * /    5
-      3. + -    4
-      4. == !=  3
-      5. &&     2
-      6. ||     1
+      2. *      5
+      2. * /    4
+      3. + -    3
+      4. == !=  2
+      5. &&     1
+      6. ||     0
   */
   int i;
   int count = 0;
@@ -261,6 +262,11 @@ int dominant_operator(int l,int r)
     }
     if(count == 0){
       if(tokens[i].type == TK_NEGATIVE){
+        if(priority >= 6){
+          priority = 6;
+          op = i;
+        }
+      }else if(tokens[i].type==TK_DEREF){
         if(priority >= 5){
           priority = 5;
           op = i;
