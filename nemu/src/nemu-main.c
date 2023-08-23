@@ -27,6 +27,8 @@ void test_expr()
   FILE *fp = fopen("/home/yanxy/ysyx/ysyx-workbench/nemu/tools/gen-expr/build/input", "r");
   assert(fp != NULL);
   char buf[65536]={};
+
+  int y=0,n=0;
   while(true)
   {
     memset(buf,0,65536);
@@ -45,8 +47,6 @@ void test_expr()
     bool success=true;
     uint32_t ans2=expr(expr_str,&success);
 
-    int y=0,n=0;
-
     if(success){
       if(ans==ans2)y++;
       else {
@@ -59,8 +59,8 @@ void test_expr()
     }else{
       printf("Expr has bug\n");
     }
-
   }
+  printf("test result: %d %d\n",y,n);
   fclose(fp);
   return;
 }
