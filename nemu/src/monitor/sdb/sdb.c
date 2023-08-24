@@ -21,6 +21,7 @@
 #include <memory/paddr.h>
 #include <memory/vaddr.h>
 
+
 //是否处于批处理模式
 static int is_batch_mode = false;
 
@@ -63,9 +64,6 @@ static int cmd_p(char *args);
 static int cmd_d(char *args);
 static int cmd_w(char *args);
 
-// static int cmd_w(char *args);
-
-// static int cmd_d(char *args);
 
 static struct {
   const char *name;
@@ -187,24 +185,12 @@ static int cmd_p(char *args)
 }
 
 static int cmd_w(char *args){
-  // if(args == NULL){
-  //   printf("Please input the argument!\n");
-  //   return 0;
-  // }
-  // WP *wp = new_wp();
-  // if(wp == NULL){
-  //   printf("No more watchpoint!\n");
-  //   return 0;
-  // }
-  // strcpy(wp->What,args);
-  // bool success = true;
-  // wp->result = expr(args,&success);
-  // if(success){
-  //   printf("Set watchpoint %d: %s\n",wp->NO,args);
-  // }
-  // else{
-  //   printf("Invalid expression!\n");
-  // }
+  if(args == NULL){
+    printf("Please input the argument!\n");
+    return 0;
+  }
+  //所有的处理都在 set_wp 中完成
+  set_wp(args);
   return 0;
 }
 
@@ -215,7 +201,7 @@ static int cmd_d(char *args){
   }
   int n;
   sscanf(args,"%d",&n);
-  //free_wp(n);
+  free_wp_idx(n);
   return 0;
 }
 

@@ -330,7 +330,6 @@ uint32_t str2hval(char *str)
   return val;
 }
 
-
 word_t eval(int l,int r,bool *success)
 {
   if(l>r){
@@ -414,4 +413,26 @@ word_t expr(char *e, bool *success) {
   int begin=0,end=nr_token-1;
   word_t res=eval(begin,end,success);
   return res;
+}
+
+int check_expr(char *e,word_t* val)
+{
+  /*
+    -1:不合法
+    0:常量表达式
+    1：非常量表达式
+  */
+  //先检查表达式是否合法
+  bool success=true;
+  word_t x=expr(e,&success);
+  if(!success)return -1;
+  *val=x;
+  //检查是否为常量表达式
+  int i;
+  for(i=0;i<nr_token;i++){
+    if(tokens[i].type==TK_REGISTER||tokens[i].type==TK_DEREF){
+      return 1;
+    }
+  }
+  return 0;
 }

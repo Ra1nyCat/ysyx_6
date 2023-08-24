@@ -20,6 +20,15 @@
 
 word_t expr(char *e, bool *success);
 
+void set_wp(char *e);
+
 void print_wp();
+
+void free_wp_idx(int n);
+
+int check_expr(char *e,word_t *val);
+
+bool watchpoint_check();
+
 
 #endif

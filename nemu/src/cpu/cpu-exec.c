@@ -17,7 +17,7 @@
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
 #include <locale.h>
-
+#include "../monitor/sdb/sdb.h"
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
  * This is useful when you use the `si' command.
@@ -41,8 +41,11 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 
 #ifdef CONFIG_WATCHPOINT  //监测点
-  extern void check_watchpoints();
-  check_watchpoints();
+  if (watchpoint_check()) {
+    nemu_state.state = NEMU_STOP;
+    nemu_state.halt_pc = _this->pc;
+    nemu_state.halt_ret = 0;
+  }
 #endif
 
 }
