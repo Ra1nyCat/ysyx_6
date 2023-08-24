@@ -155,7 +155,13 @@ static int cmd_x(char *args)
     printf("Please input the argument!\n");
     return 0;
   }
-  sscanf(arg,"%x",&addr);
+  //sscanf(arg,"%x",&addr);
+  bool succ=true;
+  addr=expr(arg,&succ);
+  if(!succ){
+    printf("Invalid expression!\n");
+    return 0;
+  }
   for(int i = 0;i < n;i++){
     if(likely(addr + i * 4))
       printf("0x%08x: 0x%08x\n",addr + i * 4,vaddr_read(addr + i * 4,4));
