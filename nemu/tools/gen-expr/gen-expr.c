@@ -56,7 +56,7 @@ void gen_num()
 }
 
 void gen_rand_op() {
-  switch(choose(7))
+  switch(choose(8))
   {
     case 0:gen('+');break;
     case 1:gen('-');break;
