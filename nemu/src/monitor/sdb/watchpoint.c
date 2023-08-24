@@ -121,7 +121,8 @@ bool watchpoint_check()
   bool flag=false;
   while(p!=NULL){
     if(p->Enb){
-      word_t val=expr(p->What,NULL);
+      bool succ=true;
+      word_t val=expr(p->What,&succ);
       if(val!=p->val){
         printf("Watchpoint %d: %s\n",p->NO,p->What);
         printf("Old value = %d\n",p->val);
