@@ -32,28 +32,23 @@ void init_wp_pool();
 static char* rl_gets() {
   //上一次读取的内容行
   static char *line_read = NULL;
-
   if (line_read) {
     free(line_read);
     line_read = NULL;
   }
-
   // 使用 readline 函数读取用户输入，提示符为 "(nemu) "
   line_read = readline("(nemu) ");
   // 如果用户输入了内容，将其添加到历史记录中
   if (line_read && *line_read) {
     add_history(line_read);
   }
-
   return line_read;
 }
-
 
 static int cmd_c(char *args) {
   cpu_exec(-1);
   return 0;
 }
-
 
 static int cmd_q(char *args) {
   nemu_state.state = NEMU_QUIT;
@@ -61,14 +56,12 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_help(char *args);
-
 static int cmd_si(char *args);
-
 static int cmd_info(char *args);
-
 static int cmd_x(char *args);
-
 static int cmd_p(char *args);
+static int cmd_d(char *args);
+static int cmd_w(char *args);
 
 // static int cmd_w(char *args);
 
@@ -86,8 +79,8 @@ static struct {
   {"info","Print the information of registers or watchpoints",cmd_info},
   {"x","Scan the memory",cmd_x},
   {"p","Calculate the value of the expression",cmd_p},
-  // {"w","Set a watchpoint",cmd_w},
-  // {"d","Delete a watchpoint",cmd_d},
+  {"w","Set a watchpoint",cmd_w},
+  {"d","Delete a watchpoint",cmd_d},
   // {"bt","Print the stack frame chain",cmd_bt},
   // {"cache","Print the cache information",cmd_cache},
   // {"tlb","Print the tlb information",cmd_tlb},
@@ -141,7 +134,7 @@ static int cmd_info(char *args){
     isa_reg_display();
   }
   else if(strcmp(arg,"w") == 0){
-    //print_wp();
+    print_wp();
   }
   else{
     printf("Unknown command '%s'\n", arg);
@@ -190,6 +183,39 @@ static int cmd_p(char *args)
   else{
     printf("Invalid expression!\n");
   }
+  return 0;
+}
+
+static int cmd_w(char *args){
+  // if(args == NULL){
+  //   printf("Please input the argument!\n");
+  //   return 0;
+  // }
+  // WP *wp = new_wp();
+  // if(wp == NULL){
+  //   printf("No more watchpoint!\n");
+  //   return 0;
+  // }
+  // strcpy(wp->What,args);
+  // bool success = true;
+  // wp->result = expr(args,&success);
+  // if(success){
+  //   printf("Set watchpoint %d: %s\n",wp->NO,args);
+  // }
+  // else{
+  //   printf("Invalid expression!\n");
+  // }
+  return 0;
+}
+
+static int cmd_d(char *args){
+  if(args == NULL){
+    printf("Please input the argument!\n");
+    return 0;
+  }
+  int n;
+  sscanf(args,"%d",&n);
+  //free_wp(n);
   return 0;
 }
 
