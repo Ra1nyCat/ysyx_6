@@ -52,6 +52,10 @@ LDFLAGS += $(CFLAGS_BUILD)
 # Include rules for menuconfig
 include $(NEMU_HOME)/scripts/config.mk
 
+ifdef EXPR_TEST
+CFLAGS +=-DEXPR_TEST
+endif
+
 ifdef CONFIG_TARGET_AM
 include $(AM_HOME)/Makefile
 LINKAGE += $(ARCHIVES)
@@ -60,9 +64,3 @@ else
 include $(NEMU_HOME)/scripts/native.mk
 endif
 
-
-ifdef EXPR_TEST
-CFLAGS=-DEXPR_TEST
-else
-CFLAGS=
-endif
