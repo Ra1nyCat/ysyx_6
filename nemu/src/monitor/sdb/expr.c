@@ -45,7 +45,7 @@ static struct rule {
   {"\\)", ')'},         // right bracket
   {"0[xX][0-9a-fA-F]+",TK_XNUMBER},// 16-number
   {"[0-9]+", TK_NUMBER},// 10-number
-  {"\\$[a-zA-Z]+[0-9]*",TK_REGISTER},// register
+  {"(\\$[a-zA-Z][0-9]+|\\$[a-zA-Z]+)",TK_REGISTER},// register
   {"!=",TK_NONEQUAL},// not equal
   {"&&",TK_AND},// and
   {"\\|\\|",TK_OR},// or
