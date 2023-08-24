@@ -369,8 +369,12 @@ word_t eval(int l,int r,bool *success)
           val2=1;
         }
         return val1 / val2;
-      case TK_AND: return val1 && val2;
-      case TK_OR: return val1 || val2;
+      case TK_AND: 
+        if(val1==0)return 0;
+        return val1 && val2;
+      case TK_OR:
+        if(val1!=0)return 1; 
+        return val1 || val2;
       case TK_EQ: return val1 == val2;
       case TK_NONEQUAL: return val1 != val2;
       case TK_DEREF: return vaddr_read(val2,4);
