@@ -75,7 +75,6 @@ int main(int argc, char *argv[]) {
 
 #ifdef EXPR_TEST
   test_expr();
-  return 0;
 #else
   /* Start engine. */
   engine_start();
