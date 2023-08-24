@@ -125,8 +125,8 @@ bool watchpoint_check()
       word_t val=expr(p->What,&succ);
       if(val!=p->val){
         printf("Watchpoint %d: %s\n",p->NO,p->What);
-        printf("Old value = %d\n",p->val);
-        printf("New value = %d\n",val);
+        printf("Old value = %u\n",p->val);
+        printf("New value = %u\n",val);
         p->val=val;
         flag=true;
       }

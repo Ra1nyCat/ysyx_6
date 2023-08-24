@@ -44,7 +44,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if (watchpoint_check()) {
     nemu_state.state = NEMU_STOP;
     nemu_state.halt_pc = _this->pc;
-    nemu_state.halt_ret = 0;
+    // nemu_state.halt_ret = 0;
   }
 #endif
 
