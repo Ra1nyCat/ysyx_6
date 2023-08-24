@@ -358,12 +358,19 @@ word_t eval(int l,int r,bool *success)
   }else if(check_parenthesis(l,r)==0){
     int op = dominant_operator(l,r);
     uint32_t val1 = eval(l,op-1,success);
-    uint32_t val2 = eval(op+1,r,success);
+    uint32_t val2=0;
     switch(tokens[op].type){
-      case '+': return val1 + val2;
-      case '-': return val1 - val2;
-      case '*': return val1 * val2;
+      case '+':
+        val2 = eval(op+1,r,success); 
+        return val1 + val2;
+      case '-':
+        val2 = eval(op+1,r,success); 
+        return val1 - val2;
+      case '*':
+        val2 = eval(op+1,r,success); 
+        return val1 * val2;
       case '/': 
+        val2 = eval(op+1,r,success);
         if(val2==0){
           printf("Divide 0!\n");
           val2=1;
@@ -371,14 +378,24 @@ word_t eval(int l,int r,bool *success)
         return val1 / val2;
       case TK_AND: 
         if(val1==0)return 0;
+        val2 = eval(op+1,r,success);
         return val1 && val2;
       case TK_OR:
         if(val1!=0)return 1; 
+        val2 = eval(op+1,r,success);
         return val1 || val2;
-      case TK_EQ: return val1 == val2;
-      case TK_NONEQUAL: return val1 != val2;
-      case TK_DEREF: return vaddr_read(val2,4);
-      case TK_NEGATIVE: return -val2;
+      case TK_EQ: 
+        val2 = eval(op+1,r,success);
+        return val1 == val2;
+      case TK_NONEQUAL:
+        val2 = eval(op+1,r,success); 
+        return val1 != val2;
+      case TK_DEREF: 
+        val2 = eval(op+1,r,success);
+        return vaddr_read(val2,4);
+      case TK_NEGATIVE: 
+        val2 = eval(op+1,r,success);
+        return -val2;
       default: assert(0);
     }
   }else{
