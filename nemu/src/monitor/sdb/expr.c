@@ -130,7 +130,7 @@ static bool make_token(char *e) {
           case TK_NUMBER: 
             tokens[nr_token].type = rules[i].token_type;
             memset(tokens[nr_token].str,0,sizeof(tokens[nr_token].str));
-            strncpy(tokens[nr_token].str,substr_start,substr_len);
+            strncpy(tokens[nr_token].str,substr_start,substr_len-1);
             nr_token++;
             break;
           case TK_XNUMBER:
