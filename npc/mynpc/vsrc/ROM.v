@@ -12,7 +12,7 @@ module ROM(
     // end
 
     initial begin
-        $readmemh("inst.hex",memory);
+        $readmemh("/home/yanxy/ysyx/ysyx-workbench/npc/mynpc/vsrc/inst.hex",memory);
         memory[0] = 32'h00000513; // addi x10, x0, 0
         memory[1] = 32'h04800593; // addi x11, x0, 72
         memory[12] = 32'h00100073; // ebreak
