@@ -18,7 +18,7 @@ int main(int argc,char** argv)
 
 				while(!contextp->gotFinish()){
 					top->eval();
-                    printf("%c\n",top->ret);
+                    printf("This is :%d\n",top->ret);
                     if(top->halt==1)
                         break;
 					tfp->dump(contextp->time());
