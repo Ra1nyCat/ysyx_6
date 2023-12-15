@@ -13,6 +13,14 @@ module ROM(
 
     initial begin
         $readmemh("inst.hex",memory);
+        memory[0] = 32'h00000513; // addi x10, x0, 0
+        memory[1] = 32'h04800593; // addi x11, x0, 72
+        memory[2] = 32'h00100073; // ebreak
+
+        // integer i;
+        // for(i=0;i<10;i=i+1) begin
+        //     $$display("memory[$d]=%h",i,memory[i]);
+        // end
     end
 
 
