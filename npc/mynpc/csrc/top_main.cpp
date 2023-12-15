@@ -18,18 +18,18 @@ int main(int argc,char** argv)
 
                 for (int i=0;i<10;i++)
                 {
-                    printf("This is :%d\n",top->ret);
-                    printf("halt:%d\n",top->halt);
+                    
                     top->clk=1;
                     top->eval();
                     tfp->dump(i*10);
+                    printf("This is :%d\n",top->ret);
+                    printf("halt:%d\n",top->halt);
+                    if(top->halt==1)
+                        break;
 
                     top->clk=0;
                     top->eval();
                     tfp->dump(i*10+5);
-
-                    if(top->halt==1)
-                        break;
                 }
 
 				delete top;
