@@ -1,4 +1,4 @@
-TOPNAME=YPC
+TOPNAME=top
 
 NXDC_FILES=/home/yanxy/ysyx/ysyx-workbench/nvboard/example/constr/top.nxdc
 
@@ -8,7 +8,7 @@ VERILATOR=verilator
 
 VERILATOR_FLAGS=-Wall -cc --trace --exe --build
 
-BUILD_DIR=./mynpc/build
+BUILD_DIR=./example/build
 
 OBJ_DIR=$(BUILD_DIR)/obj_dir
 
@@ -19,8 +19,8 @@ $(shell mkdir -p $(BUILD_DIR))
 #constrint file
 
 #project source
-VSRCS=$(shell find $(abspath ./mynpc/vsrc) -name "*.v")
-CSRCS=$(shell find $(abspath ./mynpc/csrc) -name "*.cpp" -or -name "*.c" -or -name "*.cc")
+VSRCS=$(shell find $(abspath ./example/vsrc) -name "*.v")
+CSRCS=$(shell find $(abspath ./example/csrc) -name "*.cpp" -or -name "*.c" -or -name "*.cc")
 
 #rules for verilator
 INCFLAGS=$(addprefix -I,$(INC_PATH))
