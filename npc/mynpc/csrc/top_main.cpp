@@ -22,13 +22,14 @@ int main(int argc,char** argv)
                     top->clk=1;
                     top->eval();
                     tfp->dump(i*10);
-                    printf("This is :%c\n",top->ret);
-                    if(top->halt==1)
-                        break;
 
                     top->clk=0;
                     top->eval();
                     tfp->dump(i*10+5);
+
+                    printf("This is :%c\n",top->ret);
+                    if(top->halt==1)
+                        break;
                 }
 
 				delete top;
