@@ -22,8 +22,7 @@ int main(int argc,char** argv)
                     top->clk=1;
                     top->eval();
                     tfp->dump(i*10);
-                    printf("This is :%d\n",top->ret);
-                    printf("halt:%d\n",top->halt);
+                    printf("This is :%c\n",top->ret);
                     if(top->halt==1)
                         break;
 
