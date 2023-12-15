@@ -16,17 +16,25 @@ int main(int argc,char** argv)
 				top->trace(tfp,0);
 				tfp->open("wave.vcd");
 
-				while(!contextp->gotFinish()){
-					printf("This is :%d\n",top->ret);
+                for (int i=0;i<10;i++)
+                {
+                    printf("This is :%d\n",top->ret);
                     printf("halt:%d\n",top->halt);
+                    top->clk=1;
                     top->eval();
+                    tfp->dump(i*10);
+
+                    top->clk=0;
+                    top->eval();
+                    tfp->dump(i*10+5);
+
                     if(top->halt==1)
                         break;
-					tfp->dump(contextp->time());
-					contextp->timeInc(1);
-				}
+                }
+
 				delete top;
 				tfp->close();
+                delete tfp;
 				delete contextp;
 				return 0;
 }
