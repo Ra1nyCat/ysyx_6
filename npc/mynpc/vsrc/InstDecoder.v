@@ -15,7 +15,7 @@ always @(*) begin
     rs1 = isaddi ? inst[19:15] : 5'b0;
     rd = isaddi ? inst[11:7] : 5'b0;
     imm = isaddi ? {{20{inst[31]}}, inst[31:20]} : 32'b0;
-    isbreak = (inst == 32'h100073);
+    isbreak = (inst == 32'h00100073);
     aluop = isaddi ? 1'b1 : 1'b0;
     regWriteEn = isaddi ? 1'b1 : 1'b0;
 end

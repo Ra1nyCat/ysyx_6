@@ -1,7 +1,8 @@
 module YPC (
     input clk,
     input reset,
-    output reg halt
+    output reg halt,
+    output reg [31:0] ret
 );
 
     wire [31:0] pc;
@@ -35,7 +36,7 @@ module YPC (
     );
 
     // 指令存储器
-    reg [31:0] inst;
+    wire [31:0] inst;
 
     ROM inst_mem(
         .address(pc),
@@ -63,6 +64,7 @@ module YPC (
             end else begin
                 if (aluop) begin
                     rd_data<=rs1_data+imm;
+                    ret<=rs1_data+imm;
                 end
                 next_pc <= pc + 4; // 更新 PC
             end

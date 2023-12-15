@@ -17,8 +17,8 @@ int main(int argc,char** argv)
 				tfp->open("wave.vcd");
 
 				while(!contextp->gotFinish()){
-					
 					top->eval();
+                    printf("%c\n",top->ret);
                     if(top->halt==1)
                         break;
 					tfp->dump(contextp->time());
