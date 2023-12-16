@@ -5,6 +5,8 @@ module YPC (
     output reg [31:0] ret
 );
 
+    import "DPI-C" function void print(input int val);
+
 
     reg [31:0] pc;
 
@@ -63,6 +65,7 @@ module YPC (
                 if (aluop) begin
                     rd_data<=rs1_data+imm;
                     ret<=rs1_data+imm;
+                    print(ret);
                 end
                 pc <= pc + 4; // 更新 PC
             end
