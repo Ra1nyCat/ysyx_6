@@ -9,6 +9,7 @@ module ProgramCounter(
     initial begin
         pc = 32'h0;
     end
+    
 
     //在时钟上升沿时更新pc或者重置pc
     always @(posedge clk) begin

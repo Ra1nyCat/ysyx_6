@@ -5,15 +5,12 @@ module YPC (
     output reg [31:0] ret
 );
 
-    wire [31:0] pc;
-    reg [31:0] next_pc;
 
-    ProgramCounter pc_reg(
-        .clk(clk),
-        .reset(reset),
-        .pc(pc),
-        .next_pc(next_pc)
-    );
+    reg [31:0] pc;
+
+    initial begin
+        pc = 32'h0;
+    end
 
     // 寄存器文件接口
     wire [31:0] rs1_data;
@@ -58,6 +55,7 @@ module YPC (
     always @(posedge clk) begin
         if (reset) begin
             halt <= 0;
+            pc <= 32'h0;
         end else begin
             if (isbreak) begin
                 halt <= 1; // 停机
@@ -66,7 +64,7 @@ module YPC (
                     rd_data<=rs1_data+imm;
                     ret<=rs1_data+imm;
                 end
-                next_pc <= pc + 4; // 更新 PC
+                pc <= pc + 4; // 更新 PC
             end
         end
     end
