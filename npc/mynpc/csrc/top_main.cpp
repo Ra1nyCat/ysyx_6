@@ -23,9 +23,9 @@ int main(int argc,char** argv)
                     top->eval();
                     tfp->dump(i*10);
 
-                    printf("This is :%c\n",top->ret);
-                    if(top->halt==1)
-                        break;
+                    // printf("This is :%c\n",top->ret);
+                    // if(top->halt==1)
+                    //     break;
 
                     top->clk=0;
                     top->eval();

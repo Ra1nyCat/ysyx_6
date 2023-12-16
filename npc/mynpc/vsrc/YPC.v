@@ -6,7 +6,7 @@ module YPC (
 );
 
     import "DPI-C" function void print(input int val);
-
+    import "DPI-C" function void End_Sim();
 
     reg [31:0] pc;
 
@@ -61,6 +61,7 @@ module YPC (
         end else begin
             if (isbreak) begin
                 halt <= 1; // 停机
+                End_Sim();
             end else begin
                 if (aluop) begin
                     rd_data<=rs1_data+imm;
