@@ -79,11 +79,6 @@ static struct {
   {"p","Calculate the value of the expression",cmd_p},
   {"w","Set a watchpoint",cmd_w},
   {"d","Delete a watchpoint",cmd_d},
-  // {"bt","Print the stack frame chain",cmd_bt},
-  // {"cache","Print the cache information",cmd_cache},
-  // {"tlb","Print the tlb information",cmd_tlb},
-  // {"page","Print the page information",cmd_page},
-  // {"set","Set the value of the register",cmd_set},
   /* TODO: Add more commands */
 };
 
