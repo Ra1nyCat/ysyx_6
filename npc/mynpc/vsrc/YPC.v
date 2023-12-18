@@ -1,7 +1,7 @@
 module YPC (
     input clk,
     input reset,
-    output reg halt,
+ 
     output reg [31:0] ret
 );
 
