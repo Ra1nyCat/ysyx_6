@@ -5,6 +5,15 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
+char* itoa(int num,int base){
+  static char buf[32]={};
+  int i=30;
+  for(;num&&i;i--,num/=base)
+    buf[i]="0123456789abcdef"[num%base];
+  return &buf[i+1];
+}
+
+
 int printf(const char *fmt, ...) {
   // panic("Not implemented");
   int n=0;
