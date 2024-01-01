@@ -25,7 +25,7 @@
  */
 // 当执行的指令数量少于此值时，只有执行的指令的汇编代码才会输出到屏幕。
 #define MAX_INST_TO_PRINT 10
-#define RING_BUF_SIZE 1024
+#define RING_BUF_SIZE 2048
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0; //执行的指令数量
