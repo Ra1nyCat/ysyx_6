@@ -33,22 +33,18 @@ static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = true; //是否打印每一步的执行信息
 
 //--------------------ring buffer--------------------
-typedef struct{
-  char buffer[RING_BUF_SIZE];
-  int read_index;
-  int write_index;
-}RingBuffer;
-
-static RingBuffer g_ring_buffer;
+static char g_ring_buffer[RING_BUF_SIZE];
+static int g_read_index = 0;
+static int g_write_index = 0;
 
 void write_ring_buffer(char ch){
-  g_ring_buffer.buffer[g_ring_buffer.write_index] = ch;
-  g_ring_buffer.write_index = (g_ring_buffer.write_index + 1) % RING_BUF_SIZE;
+  g_ring_buffer[g_write_index] = ch;
+  g_write_index = (g_write_index + 1) % RING_BUF_SIZE;
 }
 
 char read_ring_buffer(){
-  char ch = g_ring_buffer.buffer[g_ring_buffer.read_index];
-  g_ring_buffer.read_index = (g_ring_buffer.read_index + 1) % RING_BUF_SIZE;
+  char ch = g_ring_buffer[g_read_index];
+  g_read_index = (g_read_index + 1) % RING_BUF_SIZE;
   return ch;
 }
 //--------------------ring buffer--------------------
@@ -168,7 +164,7 @@ void cpu_exec(uint64_t n) {
       if(nemu_state.halt_ret != 0) {
         //打印环形缓冲区中的内容
         printf("ring buffer:\n");
-        while(g_ring_buffer.read_index != g_ring_buffer.write_index){
+        while(g_read_index != g_write_index){
           printf("%c", read_ring_buffer());
         }
       }
