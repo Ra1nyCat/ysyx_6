@@ -62,7 +62,8 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     //写入ring buffer
     for(int i = 0; i < strlen(_this->logbuf); i++){
       write_ring_buffer(_this->logbuf[i]);
-    } 
+    }
+    write_ring_buffer('\n'); 
   }
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
