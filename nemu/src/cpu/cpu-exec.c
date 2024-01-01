@@ -25,17 +25,45 @@
  */
 // 当执行的指令数量少于此值时，只有执行的指令的汇编代码才会输出到屏幕。
 #define MAX_INST_TO_PRINT 10
+#define RING_BUF_SIZE 1024
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0; //执行的指令数量
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = true; //是否打印每一步的执行信息
 
+//--------------------ring buffer--------------------
+typedef struct{
+  char buffer[RING_BUF_SIZE];
+  int read_index;
+  int write_index;
+}RingBuffer;
+
+static RingBuffer g_ring_buffer;
+
+void write_ring_buffer(char ch){
+  g_ring_buffer.buffer[g_ring_buffer.write_index] = ch;
+  g_ring_buffer.write_index = (g_ring_buffer.write_index + 1) % RING_BUF_SIZE;
+}
+
+char read_ring_buffer(){
+  char ch = g_ring_buffer.buffer[g_ring_buffer.read_index];
+  g_ring_buffer.read_index = (g_ring_buffer.read_index + 1) % RING_BUF_SIZE;
+  return ch;
+}
+//--------------------ring buffer--------------------
+
 void device_update();
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
-  if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
+  if (ITRACE_COND) { 
+    log_write("%s\n", _this->logbuf);
+    //写入ring buffer
+    for(int i = 0; i < strlen(_this->logbuf); i++){
+      write_ring_buffer(_this->logbuf[i]);
+    } 
+  }
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
@@ -63,7 +91,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
   int ilen = s->snpc - s->pc;
   int i;
-  uint8_t *inst = (uint8_t *)&s->isa.inst.val;
+  uint8_t *inst = (uint8_t *)&s->isa.inst.val; //可以让程序以字节的方式访问 isa.inst.val 所在的内存区域，以进行字节级别的操作
   for (i = ilen - 1; i >= 0; i --) {
     p += snprintf(p, 4, " %02x", inst[i]);
   }
@@ -129,12 +157,20 @@ void cpu_exec(uint64_t n) {
   switch (nemu_state.state) {
     case NEMU_RUNNING: nemu_state.state = NEMU_STOP; break;
 
-    case NEMU_END: case NEMU_ABORT:
+    case NEMU_END: 
+    case NEMU_ABORT:
       Log("nemu: %s at pc = " FMT_WORD,
           (nemu_state.state == NEMU_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :
            (nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
             ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
           nemu_state.halt_pc);
+      if(nemu_state.halt_ret != 0) {
+        //打印环形缓冲区中的内容
+        printf("ring buffer:\n");
+        while(g_ring_buffer.read_index != g_ring_buffer.write_index){
+          printf("%c", read_ring_buffer());
+        }
+      }
       // fall through
     case NEMU_QUIT: statistic();
   }
