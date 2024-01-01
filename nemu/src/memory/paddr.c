@@ -73,10 +73,17 @@ void mtrace_print(paddr_t addr, int len, bool is_write) {
   fprintf(mfp, "%c " FMT_PADDR " " FMT_PADDR " %d\n", is_write ? 'W' : 'R', addr, right_addr, len);
 }
 
+bool memory_print_enable(paddr_t addr) {
+  paddr_t really_addr=addr-0x80000000;
+  return MUXDEF(CONFIG_MTRACE, (really_addr >= CONFIG_MTRACE_START) &&
+         (really_addr <= CONFIG_MTRACE_END), false);
+}
+
 word_t paddr_read(paddr_t addr, int len) {
 
   #ifdef CONFIG_MTRACE //内存追踪 
-    mtrace_print(addr, len, false);
+    if(memory_print_enable(addr))
+      mtrace_print(addr, len, false);
   #endif
 
   if (likely(in_pmem(addr))) return pmem_read(addr, len);
@@ -88,7 +95,8 @@ word_t paddr_read(paddr_t addr, int len) {
 void paddr_write(paddr_t addr, int len, word_t data) {
 
   #ifdef CONFIG_MTRACE
-    mtrace_print(addr, len, true);
+    if(memory_print_enable(addr))
+      mtrace_print(addr, len, true);
   #endif
 
   if (likely(in_pmem(addr))) { pmem_write(addr, len, data); return; }

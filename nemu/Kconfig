@@ -138,7 +138,7 @@ config MTRACE_START
 config MTRACE_END
   depends on MTRACE
   int "When memory tracing is disabled (unit: number of instructions)"
-  default 10000
+  default 0x8000000
 
 config IMTRACE
   depends on MTRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
