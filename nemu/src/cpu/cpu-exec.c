@@ -68,6 +68,21 @@ extern int symtab_size;
 
 // }
 
+size_t hex2val(char* str)
+{
+  int i=0;
+  if(str[0]=='0'&&(str[1]=='x'||str[1]=='X'))i=2;
+  size_t val=0;
+  for(;str[i];i++){
+    if(str[i]>='a'&&str[i]<='f'){
+      val=val*16+(str[i]-'a')+10;
+    }else{
+      val=val*16+(str[i]-'0');
+    }
+  }
+  return val;
+}
+
 
 
 void device_update();
@@ -83,6 +98,22 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     write_ring_buffer('\n'); 
   }
 #endif
+
+#ifdef CONFIG_FTRACE //函数追踪
+
+  char vale[35];
+  memset(vale,0,sizeof(char)*35);
+  for(int i=0;_this->logbuf[i]!=':';i++)
+    vale[i]=_this->logbuf[i];
+  
+  size_t value=hex2val(vale);
+
+  
+  
+
+#endif
+
+
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 
