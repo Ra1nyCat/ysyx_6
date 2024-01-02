@@ -149,7 +149,12 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   printf("%s\n",_this->logbuf+i);
   if(strncmp(_this->logbuf+i,call,strlen(call))==0){
     int idx=find_func(value);
-    char* func_name=(char*)(strtab+symtab[idx].st_name);
+    char* func_name=NULL;
+    if(idx!=-1){
+      func_name=(char*)(strtab+symtab[idx].st_name);
+    }else{
+      func_name="???";
+    }
     printf(FMT_WORD ":" ,_this->pc);
     for(int k=0;k<=ftrace_dep;k++)printf(" ");
     ftrace_dep++;
