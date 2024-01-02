@@ -93,6 +93,7 @@ Elf32_Addr hex2Elf32Addr(unsigned int str)
 
 int find_func(Elf32_Addr value)
 {
+  printf("symsize:%d\n",symtab_size);
   for(int i=0;i<symtab_size;i++){
     printf("L:%x  R:%x  value:%x\n",symtab[i].st_value,symtab[i].st_value+symtab[i].st_size-1,value);
     if(symtab[i].st_value<=value||symtab[i].st_value+symtab[i].st_size-1>=value){
