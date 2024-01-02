@@ -150,6 +150,10 @@ config IMTRACE_COND
   string "Only trace memory when the condition is true"
   default "true"
 
+config FTRACE
+  bool "Enable function tracing"
+  default n
+
 config TRACE
   bool "Enable tracer"
   default y

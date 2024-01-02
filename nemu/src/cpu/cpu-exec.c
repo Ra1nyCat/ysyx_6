@@ -26,6 +26,7 @@
 // 当执行的指令数量少于此值时，只有执行的指令的汇编代码才会输出到屏幕。
 #define MAX_INST_TO_PRINT 10
 #define RING_BUF_SIZE 1024
+#define FTRACE_BUF_SIZE 4096
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0; //执行的指令数量
@@ -48,6 +49,26 @@ char read_ring_buffer(){
   return ch;
 }
 //--------------------ring buffer--------------------
+
+
+//--------------------FTRACE BUFFER------------------
+
+// static char g_ftrace_buffer[FTRACE_BUF_SIZE];
+// static int g_f_read_index = 0;
+// static int g_f_write_index = 0;
+
+#include<elf.h>
+extern const char *strtab;
+extern Elf32_Sym *symtab;
+extern int symtab_size;
+
+// void decode_inst(Decode *_this)
+// {
+//   //解析指令的地址
+
+// }
+
+
 
 void device_update();
 

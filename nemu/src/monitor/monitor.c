@@ -15,7 +15,6 @@
 
 #include <isa.h>
 #include <memory/paddr.h>
-#include <elf.h>
 
 void init_rand();
 void init_log(const char *log_file);
@@ -49,6 +48,51 @@ static int difftest_port = 1234;
 
 //-------------------加上ELF符号表-------------------
 
+#include <elf.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <unistd.h>
+
+const char *strtab = NULL;
+Elf32_Sym *symtab = NULL;
+int symtab_size = 0;
+
+void load_elf_symbols(const char* file)
+{
+  int fd=open(file,O_RDONLY);
+  assert(fd!=-1);
+  struct stat statbuf;
+  fstat(fd,&statbuf);
+  size_t size=statbuf.st_size;
+  char* mem=mmap(NULL,size,PROT_READ,MAP_PRIVATE,fd,0);
+  assert(mem!=NULL);
+
+  Elf32_Ehdr *ehdr=(Elf32_Ehdr *)mem;
+  Elf32_Shdr *shdr=(Elf32_Shdr *)(mem+ehdr->e_shoff);
+  const char *strtab_p=(const char *)(mem+shdr[ehdr->e_shstrndx].sh_offset);//获取节头表字符串表的地址
+
+  for(int i=0;i<ehdr->e_shnum;i++){
+    const char* section_name=strtab_p+shdr[i].sh_name;
+    if(shdr[i].sh_type==SHT_STRTAB && strcmp(section_name,".strtab")==0){
+      strtab=mem+shdr[i].sh_offset;
+    }
+
+    if(shdr[i].sh_type==SHT_SYMTAB){
+      symtab=(Elf32_Sym*)(mem+shdr[i].sh_offset);
+      symtab_size=shdr[i].sh_size/sizeof(Elf32_Sym);
+    }
+  }
+
+  if(!strtab || !symtab){
+    printf("Symbol or string table not found.\n");
+  }
+
+  munmap(mem,statbuf.st_size);
+  close(fd);
+
+  return;
+}
 
 static long load_img() {
   if (img_file == NULL) {
@@ -89,7 +133,7 @@ static int parse_args(int argc, char *argv[]) {
       case 'p': sscanf(optarg, "%d", &difftest_port); break;
       case 'l': log_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
-      case 'e': img_file = optarg; break;
+      case 'e': load_elf_symbols(optarg); break;
       case 1: img_file = optarg; return 0;
       default:
         printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
