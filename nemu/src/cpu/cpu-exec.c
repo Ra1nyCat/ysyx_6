@@ -83,6 +83,24 @@ size_t hex2val(char* str)
   return val;
 }
 
+Elf32_Addr hex2Elf32Addr(unsigned int str)
+{
+  // char* endPtr;
+  // Elf32_Addr val=strtoul(str,&endPtr,16);
+  // return val;
+  return str;
+}
+
+int find_func(Elf32_Addr value)
+{
+  for(int i=0;i<symtab_size;i++){
+    if(symtab[i].st_value<=value||symtab[i].st_value+symtab[i].st_size-1>=value){
+      return i;
+    }
+  }
+  return -1;
+}
+
 
 
 void device_update();
@@ -101,15 +119,46 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 
 #ifdef CONFIG_FTRACE //函数追踪
 
-  char vale[35];
-  memset(vale,0,sizeof(char)*35);
-  for(int i=0;_this->logbuf[i]!=':';i++)
-    vale[i]=_this->logbuf[i];
-  
-  size_t value=hex2val(vale);
+  static int ftrace_dep=0;
+
+  // char vale[35];
+  // memset(vale,0,sizeof(char)*35);
+  // for(int i=0;_this->logbuf[i]!=':';i++)
+  //   vale[i]=_this->logbuf[i];
 
   
-  
+  Elf32_Addr value=hex2Elf32Addr(_this->pc);
+
+  //识别函数调用指令和返回指令
+  //调用指令 jal ra,xxxxx
+  //返回指令 jalr zero,0(ra)
+
+  //i定位到指令的第一个字符，五个空格
+  int cnt=0;
+  int i=0;
+  for(;cnt<5;i++){
+    if(_this->logbuf[i]==' ')cnt++;
+  }
+
+  //判断是否为jal指令
+  const char* call="jal ra, 0x";
+  const char* ret="jalr  zero, 0(ra)";
+  if(strncmp(_this->logbuf+i,call,strlen(call))==0){
+    int idx=find_func(value);
+    char* func_name=(char*)(strtab+symtab[idx].st_name);
+    printf(FMT_WORD ":" ,_this->pc);
+    for(int k=0;k<=ftrace_dep;k++)printf(" ");
+    ftrace_dep++;
+    printf("call [%s@%s]\n",func_name,_this->logbuf+i+strlen(call));
+  }else if(strncmp(_this->logbuf+i,ret,strlen(ret))==0){
+    //返回指令
+    //从函数调用栈中弹出函数
+    int idx=find_func(value);
+    char* func_name=(char*)(strtab+symtab[idx].st_name);
+    printf(FMT_WORD ":" ,_this->pc);
+    for(int k=0;k<ftrace_dep;k++)printf(" ");
+    printf("ret [%s]\n",func_name);
+  }
 
 #endif
 
