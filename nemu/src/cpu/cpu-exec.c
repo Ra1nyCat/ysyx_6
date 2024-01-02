@@ -130,6 +130,8 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   
   Elf32_Addr value=hex2Elf32Addr(_this->pc);
 
+  printf("value:%x\n",value);
+
   //识别函数调用指令和返回指令
   //调用指令 jal ra,xxxxx
   //返回指令 jalr zero,0(ra)
