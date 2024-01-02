@@ -130,7 +130,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   
   Elf32_Addr value=hex2Elf32Addr(_this->pc);
 
-  printf("value:%x\n",value);
+  // printf("value:%x\n",value);
 
   //识别函数调用指令和返回指令
   //调用指令 jal ra,xxxxx
@@ -163,7 +163,12 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     //返回指令
     //从函数调用栈中弹出函数
     int idx=find_func(value);
-    char* func_name=(char*)(strtab+symtab[idx].st_name);
+    char* func_name=NULL;
+    if(idx!=-1){
+      func_name=(char*)(strtab+symtab[idx].st_name);
+    }else{
+      func_name="???";
+    }
     printf(FMT_WORD ":" ,_this->pc);
     for(int k=0;k<ftrace_dep;k++)printf(" ");
     printf("ret [%s]\n",func_name);
