@@ -149,7 +149,6 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     printf("call [%s@%s]\n",func_name,_this->logbuf+i+strlen(jcall));
   }
   else if(strncmp(_this->logbuf+i,jrcall,strlen(jrcall))==0){
-    printf("hello world\n");
     int idx=find_func(_this->dnpc);
     char* func_name=NULL;
     if(idx!=-1){
