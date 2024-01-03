@@ -90,7 +90,7 @@ int find_func(Elf32_Addr value)
   for(int i=0;i<symtab_size;i++){
     // printf("L:%x  R:%x  value:%x\n",symtab[i].st_value,symtab[i].st_value+symtab[i].st_size-1,value);
     if(ELF32_ST_TYPE(symtab[i].st_info)!=STT_FUNC)continue;
-    if(symtab[i].st_value==value||symtab[i].st_value+symtab[i].st_size==value){
+    if(symtab[i].st_value<=value||symtab[i].st_value+symtab[i].st_size>value){
       return i;
     }
   }
