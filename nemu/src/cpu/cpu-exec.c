@@ -91,7 +91,7 @@ int find_func(Elf32_Addr value)
     
     if(ELF32_ST_TYPE(symtab[i].st_info)!=STT_FUNC)continue;
     if(symtab[i].st_value<=value&&symtab[i].st_value+symtab[i].st_size>value){
-      printf("L:%x  R:%x  value:%x\n",symtab[i].st_value,symtab[i].st_value+symtab[i].st_size-1,value);
+      // printf("L:%x  R:%x  value:%x\n",symtab[i].st_value,symtab[i].st_value+symtab[i].st_size-1,value);
       return i;
     }
   }
@@ -136,18 +136,17 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   const char* ret="jalr	zero, 0(ra)";
   
   if(strncmp(_this->logbuf+i,jcall,strlen(jcall))==0){
-    
-    // int idx=find_func(_this->dnpc);
-    // char* func_name=NULL;
-    // if(idx!=-1){
-    //   func_name=(char*)(strtab+symtab[idx].st_name);
-    // }else{
-    //   func_name="???";
-    // }
-    // printf(FMT_WORD ":" ,_this->pc);
-    // for(int k=0;k<=ftrace_dep;k++)printf(" ");
-    // ftrace_dep++;
-    // printf("call [%s@%s]\n",func_name,_this->logbuf+i+strlen(jcall));
+    int idx=find_func(_this->dnpc);
+    char* func_name=NULL;
+    if(idx!=-1){
+      func_name=(char*)(strtab+symtab[idx].st_name);
+    }else{
+      func_name="???";
+    }
+    printf(FMT_WORD ":" ,_this->pc);
+    for(int k=0;k<=ftrace_dep;k++)printf(" ");
+    ftrace_dep++;
+    printf("call [%s@%s]\n",func_name,_this->logbuf+i+strlen(jcall));
   }
   else if(strncmp(_this->logbuf+i,jrcall,strlen(jrcall))==0){
     printf("hello world\n");
@@ -166,16 +165,16 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   else if(strncmp(_this->logbuf+i,ret,strlen(ret))==0){
     //返回指令
     //从函数调用栈中弹出函数
-    // int idx=find_func(_this->dnpc);
-    // char* func_name=NULL;
-    // if(idx!=-1){
-    //   func_name=(char*)(strtab+symtab[idx].st_name);
-    // }else{
-    //   func_name="???";
-    // }
-    // printf(FMT_WORD ":" ,_this->pc);
-    // for(int k=0;k<ftrace_dep;k++)printf(" ");
-    // printf("ret [%s]\n",func_name);
+    int idx=find_func(_this->dnpc);
+    char* func_name=NULL;
+    if(idx!=-1){
+      func_name=(char*)(strtab+symtab[idx].st_name);
+    }else{
+      func_name="???";
+    }
+    printf(FMT_WORD ":" ,_this->pc);
+    for(int k=0;k<ftrace_dep;k++)printf(" ");
+    printf("ret [%s]\n",func_name);
   }
 
 #endif
