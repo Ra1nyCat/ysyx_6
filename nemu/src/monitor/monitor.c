@@ -57,15 +57,17 @@ static int difftest_port = 1234;
 const char *strtab = NULL;
 Elf32_Sym *symtab = NULL;
 int symtab_size = 0;
+char* mem=NULL;
+int fd=-1;
 
 void load_elf_symbols(const char* file)
 {
-  int fd=open(file,O_RDONLY);
+  fd=open(file,O_RDONLY);
   assert(fd!=-1);
   struct stat statbuf;
   fstat(fd,&statbuf);
   size_t size=statbuf.st_size;
-  char* mem=mmap(NULL,size,PROT_READ,MAP_PRIVATE,fd,0);
+  mem=mmap(NULL,size,PROT_READ,MAP_PRIVATE,fd,0);
   assert(mem!=NULL);
 
   Elf32_Ehdr *ehdr=(Elf32_Ehdr *)mem;
@@ -89,7 +91,7 @@ void load_elf_symbols(const char* file)
   }
 
   // munmap(mem,statbuf.st_size);
-  close(fd);
+  // close(fd);
 
   return;
 }
