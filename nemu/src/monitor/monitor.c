@@ -90,6 +90,13 @@ void load_elf_symbols(const char* file)
     printf("Symbol or string table not found.\n");
   }
 
+  //测试打印函数名称
+  for(int i=0;i<symtab_size;i++){
+    if(ELF32_ST_TYPE(symtab[i].st_info)!=STT_FUNC)continue;//只打印函数
+    const char* name=strtab+symtab[i].st_name;
+    printf("%s\n",name);
+  }
+
   // munmap(mem,statbuf.st_size);
   // close(fd);
 
