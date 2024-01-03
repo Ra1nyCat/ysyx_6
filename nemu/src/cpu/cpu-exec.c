@@ -147,11 +147,11 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   }
 
   //判断是否为jal指令
-  const char* call="jal	ra,800001cc";
+  const char* jcall="jal  ra, ";
+  const char* jrcall="jalr  ra, ";
   const char* ret="jalr zero, 0(ra)";
-  //printf("%s\n",_this->logbuf+i);
-  printf("%s\n",_this->logbuf+i);
-  if(strncmp(_this->logbuf+i,call,strlen(call))==0){
+  // printf("%s\n",_this->logbuf+i);
+  if(strncmp(_this->logbuf+i,jcall,strlen(jcall))==0){
     int idx=find_func(value);
     char* func_name=NULL;
     if(idx!=-1){
@@ -162,8 +162,22 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     printf(FMT_WORD ":" ,_this->pc);
     for(int k=0;k<=ftrace_dep;k++)printf(" ");
     ftrace_dep++;
-    printf("call [%s@%s]\n",func_name,_this->logbuf+i+strlen(call));
-  }else if(strncmp(_this->logbuf+i,ret,strlen(ret))==0){
+    printf("call [%s@%s]\n",func_name,_this->logbuf+i+strlen(jcall));
+  }
+  else if(strncmp(_this->logbuf+i,jrcall,strlen(jrcall))==0){
+    int idx=find_func(value);
+    char* func_name=NULL;
+    if(idx!=-1){
+      func_name=(char*)(strtab+symtab[idx].st_name);
+    }else{
+      func_name="???";
+    }
+    printf(FMT_WORD ":" ,_this->pc);
+    for(int k=0;k<=ftrace_dep;k++)printf(" ");
+    ftrace_dep++;
+    printf("call [%s@%s]\n",func_name,_this->logbuf+i+strlen(jrcall));
+  }
+  else if(strncmp(_this->logbuf+i,ret,strlen(ret))==0){
     //返回指令
     //从函数调用栈中弹出函数
     int idx=find_func(value);
