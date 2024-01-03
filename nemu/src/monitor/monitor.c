@@ -88,7 +88,7 @@ void load_elf_symbols(const char* file)
     printf("Symbol or string table not found.\n");
   }
 
-  munmap(mem,statbuf.st_size);
+  // munmap(mem,statbuf.st_size);
   close(fd);
 
   return;
