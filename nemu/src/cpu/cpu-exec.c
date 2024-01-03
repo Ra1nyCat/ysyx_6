@@ -131,7 +131,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 
   //判断是否为jal指令
   const char* jcall="jal	ra, ";
-  const char* jrcall="jal	ra, ";
+  const char* jrcall="jalr	ra, ";
   const char* ret="jalr	zero, 0(ra)";
   
   if(strncmp(_this->logbuf+i,jcall,strlen(jcall))==0){
