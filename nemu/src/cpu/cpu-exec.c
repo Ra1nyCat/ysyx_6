@@ -146,14 +146,14 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     if(_this->logbuf[i]==' ')cnt++;
   }
   // printf("%s\n",_this->logbuf+i);
-  
+
   //判断是否为jal指令
   const char* jcall="jal	ra, ";
   const char* jrcall="jal	ra, ";
   const char* ret="jalr	zero, 0(ra)";
   
   if(strncmp(_this->logbuf+i,jcall,strlen(jcall))==0){
-    int idx=find_func(value);
+    int idx=find_func(_this->dnpc);
     char* func_name=NULL;
     if(idx!=-1){
       func_name=(char*)(strtab+symtab[idx].st_name);
@@ -166,7 +166,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     printf("call [%s@%s]\n",func_name,_this->logbuf+i+strlen(jcall));
   }
   else if(strncmp(_this->logbuf+i,jrcall,strlen(jrcall))==0){
-    int idx=find_func(value);
+    int idx=find_func(_this->dnpc);
     char* func_name=NULL;
     if(idx!=-1){
       func_name=(char*)(strtab+symtab[idx].st_name);
