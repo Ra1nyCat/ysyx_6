@@ -146,7 +146,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     printf(FMT_WORD ":" ,_this->pc);
     for(int k=0;k<=ftrace_dep;k++)printf(" ");
     ftrace_dep++;
-    printf("call [%s@%s]\n",func_name,_this->logbuf+i+strlen(jcall));
+    printf("call [%s@%x]\n",func_name,_this->dnpc);
   }
   else if(strncmp(_this->logbuf+i,jrcall,strlen(jrcall))==0){
     int idx=find_func(_this->dnpc);
@@ -159,7 +159,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     printf(FMT_WORD ":" ,_this->pc);
     for(int k=0;k<=ftrace_dep;k++)printf(" ");
     ftrace_dep++;
-    printf("call [%s@%s]\n",func_name,_this->logbuf+i+strlen(jrcall));
+    printf("call [%s@%x]\n",func_name,_this->dnpc);
   }
   else if(strncmp(_this->logbuf+i,ret,strlen(ret))==0){
     //返回指令
