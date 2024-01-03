@@ -164,7 +164,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   else if(strncmp(_this->logbuf+i,ret,strlen(ret))==0){
     //返回指令
     //从函数调用栈中弹出函数
-    int idx=find_func(_this->dnpc);
+    int idx=find_func(_this->pc);
     char* func_name=NULL;
     if(idx!=-1){
       func_name=(char*)(strtab+symtab[idx].st_name);
