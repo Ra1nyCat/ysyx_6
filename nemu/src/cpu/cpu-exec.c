@@ -173,6 +173,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     }
     printf(FMT_WORD ":" ,_this->pc);
     for(int k=0;k<ftrace_dep;k++)printf(" ");
+    ftrace_dep--;
     printf("ret [%s]\n",func_name);
   }
 
