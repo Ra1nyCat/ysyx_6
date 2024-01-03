@@ -150,7 +150,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   const char* jcall="jal  ra, ";
   const char* jrcall="jalr  ra, ";
   const char* ret="jalr zero, 0(ra)";
-  // printf("%s\n",_this->logbuf+i);
+  printf("%s\n",_this->logbuf+i);
   if(strncmp(_this->logbuf+i,jcall,strlen(jcall))==0){
     int idx=find_func(value);
     char* func_name=NULL;
